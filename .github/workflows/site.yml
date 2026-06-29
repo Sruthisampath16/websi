@@ -1,0 +1,21 @@
+name: launching website
+on:
+ push:
+
+jobs:
+  first-jobs:
+    - name: check the actions
+      uses: actions/checkout@v4
+
+    - name: Docker login
+      run: |
+           echo "${{secrets.DOCKER_PASSWORD}} " |\
+           docker login -u "sruthidoc07" --password-stdin
+
+    - name: Docker build
+      run: |
+            docker build -t sruthidoc07/websi:v1 .
+
+   - name: Docker push
+     run: |
+          docker push -d -p 8080:80 sruthidoc07/websi:v1
