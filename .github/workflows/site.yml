@@ -21,3 +21,18 @@ jobs:
       - name: Docker push
         run: |
            docker push sruthidoc07/websi:v1
+
+     - name: deploy to ec2
+       uses: appleboy|ssh-action@v1
+
+      with:
+        host: ${{secrets.EC2_HOST }}
+        username: ${{secrets.EC2_USER }}
+        key: ${{secrets.EC2_SSHKEY }}
+
+        scripts: |
+          docker pull sruthidoc07/websi:v1
+          docker stop  websi || true
+          docker rm websi || true
+          docker run -d --name websi --p 80:80 sruthidoc07/websi:v1
+
